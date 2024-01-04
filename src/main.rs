@@ -30,9 +30,6 @@ fn main() -> AppResult<()> {
         .build()?
         .filter_map(|d| Some(Project::new(d.ok()?.into_path()))),
     );
-    app.projects.dedup();
-    app.filtered_projects = app.projects.clone();
-
     app.start_time = start.elapsed();
 
     // Initialize the terminal user interface.

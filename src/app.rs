@@ -52,10 +52,29 @@ impl App {
     where
         I: IntoIterator<Item = Project>,
     {
-        Self {
+        let mut app = Self {
             projects: projects.into_iter().collect(),
             ..Default::default()
-        }
+        };
+        app.dedup();
+        app.filtered_projects = app.projects.clone();
+        app
+    }
+
+    /// Remove duplicates and subprojects
+    fn dedup(&mut self) {
+        self.projects.dedup();
+
+        let projects = self.projects.clone();
+
+        self.projects.retain(|p| {
+            for p2 in &projects {
+                if p.path.starts_with(&p2.path) && p != p2 {
+                    return false;
+                }
+            }
+            true
+        });
     }
 
     /// Handles the tick event of the terminal.

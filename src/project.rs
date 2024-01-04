@@ -1,9 +1,6 @@
 use std::{cmp::Ordering, fs::DirEntry, path::PathBuf};
 
-use ratatui::{
-    prelude::{Line, Text},
-    style::Stylize,
-};
+use ratatui::{prelude::Line, style::Stylize, widgets::ListItem};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Project {
@@ -48,7 +45,7 @@ impl Project {
     }
 }
 
-impl<'a> From<Project> for Text<'a> {
+impl<'a> From<Project> for ListItem<'a> {
     fn from(value: Project) -> Self {
         Self::from(Line::from(vec![
             value
