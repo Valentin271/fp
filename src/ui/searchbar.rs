@@ -7,8 +7,7 @@ use crate::{app::App, theme::THEME};
 
 pub fn render(f: &mut Frame, app: &App, area: Rect) {
     let searchbox = Paragraph::new(app.search.clone()).block(
-        Block::default()
-            .borders(Borders::ALL)
+        Block::bordered()
             .border_type(BorderType::Rounded)
             .border_style(THEME.border)
             .title(

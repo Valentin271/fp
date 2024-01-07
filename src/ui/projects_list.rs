@@ -8,8 +8,7 @@ use crate::{app::App, theme::THEME};
 pub fn render(f: &mut Frame, app: &mut App, area: Rect) {
     let projects = List::new(app.filtered_projects.clone())
         .block(
-            Block::default()
-                .borders(Borders::ALL)
+            Block::bordered()
                 .border_type(BorderType::Rounded)
                 .border_style(THEME.border)
                 .title(

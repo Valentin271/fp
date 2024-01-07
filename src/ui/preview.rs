@@ -17,7 +17,7 @@ pub fn render(f: &mut Frame, app: &mut App, area: Rect) {
                 if let Some(style) = LS_COLORS.style_for_path(e.path()) {
                     ListItem::new(Span::styled(
                         e.file_name().to_str().unwrap().to_owned(),
-                        style.to_crossterm_style().into(),
+                        style.to_crossterm_style(),
                     ))
                 } else {
                     ListItem::new(e.file_name().to_str().unwrap().to_owned())
@@ -29,8 +29,7 @@ pub fn render(f: &mut Frame, app: &mut App, area: Rect) {
     };
 
     let preview = List::new(files).block(
-        Block::default()
-            .borders(Borders::ALL)
+        Block::bordered()
             .border_type(BorderType::Rounded)
             .border_style(THEME.border)
             .title(
