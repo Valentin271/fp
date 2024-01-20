@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 #[derive(Default, Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ThemeVariant {
     #[default]
@@ -5,11 +7,13 @@ pub enum ThemeVariant {
     Light,
 }
 
-impl From<&str> for ThemeVariant {
-    fn from(value: &str) -> Self {
-        match value.to_lowercase().trim() {
-            "light" => ThemeVariant::Light,
-            _ => ThemeVariant::Dark,
+impl FromStr for ThemeVariant {
+    type Err = &'static str;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().trim() {
+            "light" => Ok(ThemeVariant::Light),
+            _ => Ok(ThemeVariant::Dark),
         }
     }
 }
@@ -20,19 +24,40 @@ mod tests {
 
     #[test]
     fn light() {
-        assert_eq!(ThemeVariant::from("light"), ThemeVariant::Light);
-        assert_eq!(ThemeVariant::from("  light"), ThemeVariant::Light);
-        assert_eq!(ThemeVariant::from("light  "), ThemeVariant::Light);
-        assert_eq!(ThemeVariant::from("LIGHT"), ThemeVariant::Light);
-        assert_eq!(ThemeVariant::from(" LiGhT  "), ThemeVariant::Light);
+        assert_eq!(
+            ThemeVariant::from_str("light").unwrap(),
+            ThemeVariant::Light
+        );
+        assert_eq!(
+            ThemeVariant::from_str("  light").unwrap(),
+            ThemeVariant::Light
+        );
+        assert_eq!(
+            ThemeVariant::from_str("light  ").unwrap(),
+            ThemeVariant::Light
+        );
+        assert_eq!(
+            ThemeVariant::from_str("LIGHT").unwrap(),
+            ThemeVariant::Light
+        );
+        assert_eq!(
+            ThemeVariant::from_str(" LiGhT  ").unwrap(),
+            ThemeVariant::Light
+        );
     }
 
     #[test]
     fn dark() {
-        assert_eq!(ThemeVariant::from("dark"), ThemeVariant::Dark);
-        assert_eq!(ThemeVariant::from("  dark  "), ThemeVariant::Dark);
-        assert_eq!(ThemeVariant::from("DARK"), ThemeVariant::Dark);
-        assert_eq!(ThemeVariant::from(""), ThemeVariant::Dark);
-        assert_eq!(ThemeVariant::from("whatever"), ThemeVariant::Dark);
+        assert_eq!(ThemeVariant::from_str("dark").unwrap(), ThemeVariant::Dark);
+        assert_eq!(
+            ThemeVariant::from_str("  dark  ").unwrap(),
+            ThemeVariant::Dark
+        );
+        assert_eq!(ThemeVariant::from_str("DARK").unwrap(), ThemeVariant::Dark);
+        assert_eq!(ThemeVariant::from_str("").unwrap(), ThemeVariant::Dark);
+        assert_eq!(
+            ThemeVariant::from_str("whatever").unwrap(),
+            ThemeVariant::Dark
+        );
     }
 }

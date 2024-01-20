@@ -1,5 +1,5 @@
 use std::{
-    env::{self, args},
+    env::{self},
     io,
     path::PathBuf,
     time::Instant,
@@ -7,6 +7,7 @@ use std::{
 
 use fp::{
     app::{App, AppResult},
+    cli::Cli,
     event::{Event, EventHandler},
     handler::handle_key_events,
     project::Project,
@@ -17,7 +18,8 @@ use globwalk::GlobWalkerBuilder;
 use ratatui::{backend::CrosstermBackend, Terminal};
 
 fn main() -> AppResult<()> {
-    init_theme(args().nth(1).unwrap_or_default().as_str().into());
+    let cli: Cli = argh::from_env();
+    init_theme(cli.theme);
 
     let searchpath = env::var("HOME")?;
 

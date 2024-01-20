@@ -1,5 +1,6 @@
 /// Application.
 pub mod app;
+pub mod cli;
 /// Terminal events handler.
 pub mod event;
 /// Event handler.
