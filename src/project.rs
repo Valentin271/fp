@@ -1,6 +1,11 @@
 use std::{cmp::Ordering, fs::DirEntry, path::PathBuf};
 
-use ratatui::{prelude::Line, style::Stylize, widgets::ListItem};
+use ratatui::{
+    prelude::{Line, Styled},
+    widgets::ListItem,
+};
+
+use crate::theme::theme;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Project {
@@ -57,7 +62,12 @@ impl<'a> From<Project> for ListItem<'a> {
                 .to_string()
                 .into(),
             " ".into(),
-            value.path.to_str().unwrap().to_string().dim(),
+            value
+                .path
+                .to_str()
+                .unwrap()
+                .to_string()
+                .set_style(theme().project_path),
         ]))
     }
 }

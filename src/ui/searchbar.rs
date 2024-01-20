@@ -3,13 +3,13 @@ use ratatui::{
     widgets::{block::Title, *},
 };
 
-use crate::{app::App, theme::THEME};
+use crate::{app::App, theme::theme};
 
 pub fn render(f: &mut Frame, app: &App, area: Rect) {
     let searchbox = Paragraph::new(app.search.clone()).block(
         Block::bordered()
             .border_type(BorderType::Rounded)
-            .border_style(THEME.border)
+            .border_style(theme().border)
             .title(
                 Title::default()
                     .alignment(Alignment::Center)

@@ -1,16 +1,24 @@
-use std::{env, io, path::PathBuf, time::Instant};
+use std::{
+    env::{self, args},
+    io,
+    path::PathBuf,
+    time::Instant,
+};
 
 use fp::{
     app::{App, AppResult},
     event::{Event, EventHandler},
     handler::handle_key_events,
     project::Project,
+    theme::init_theme,
     tui::Tui,
 };
 use globwalk::GlobWalkerBuilder;
 use ratatui::{backend::CrosstermBackend, Terminal};
 
 fn main() -> AppResult<()> {
+    init_theme(args().nth(1).unwrap_or_default().as_str().into());
+
     let searchpath = env::var("HOME")?;
 
     if !PathBuf::from(&searchpath).is_dir() {

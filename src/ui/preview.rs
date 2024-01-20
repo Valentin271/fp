@@ -5,7 +5,7 @@ use ratatui::{
 
 use crate::{
     app::App,
-    theme::{LS_COLORS, THEME},
+    theme::{theme, LS_COLORS},
 };
 
 pub fn render(f: &mut Frame, app: &mut App, area: Rect) {
@@ -31,7 +31,7 @@ pub fn render(f: &mut Frame, app: &mut App, area: Rect) {
     let preview = List::new(files).block(
         Block::bordered()
             .border_type(BorderType::Rounded)
-            .border_style(THEME.border)
+            .border_style(theme().border)
             .title(
                 Title::default()
                     .alignment(Alignment::Center)

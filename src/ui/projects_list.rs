@@ -3,14 +3,14 @@ use ratatui::{
     widgets::{block::Title, *},
 };
 
-use crate::{app::App, theme::THEME};
+use crate::{app::App, theme::theme};
 
 pub fn render(f: &mut Frame, app: &mut App, area: Rect) {
     let projects = List::new(app.filtered_projects.clone())
         .block(
             Block::bordered()
                 .border_type(BorderType::Rounded)
-                .border_style(THEME.border)
+                .border_style(theme().border)
                 .title(
                     Title::default()
                         .alignment(Alignment::Center)
@@ -19,7 +19,7 @@ pub fn render(f: &mut Frame, app: &mut App, area: Rect) {
         )
         .highlight_symbol(" ")
         .highlight_spacing(HighlightSpacing::Always)
-        .highlight_style(THEME.selected)
+        .highlight_style(theme().selected)
         .direction(ListDirection::BottomToTop);
 
     f.render_stateful_widget(projects, area, &mut app.list_state);
