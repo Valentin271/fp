@@ -1,9 +1,12 @@
 use std::{error, time::Duration};
 
 use ratatui::widgets::ListState;
+use state::AppState;
 use strsim::normalized_damerau_levenshtein;
 
 use crate::project::Project;
+
+mod state;
 
 /// Application result type.
 pub type AppResult<T> = std::result::Result<T, Box<dyn error::Error>>;
@@ -15,7 +18,7 @@ const MIN_SCORE: f64 = 200.;
 #[derive(Debug)]
 pub struct App {
     /// Is the application running?
-    pub running: bool,
+    pub state: AppState,
     /// The time the app took to startup
     pub start_time: Duration,
     /// Search string
@@ -35,7 +38,7 @@ pub struct App {
 impl Default for App {
     fn default() -> Self {
         Self {
-            running: true,
+            state: Default::default(),
             start_time: Duration::default(),
             search: String::new(),
             preview: true,
@@ -82,7 +85,7 @@ impl App {
 
     /// Set running to false to quit the application.
     pub fn quit(&mut self) {
-        self.running = false;
+        self.state = AppState::Stopped;
     }
 
     pub fn up(&mut self) {
