@@ -19,9 +19,7 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
         // Clear search box
         (KeyModifiers::CONTROL, KeyCode::Char('u')) => app.clear_search(),
         // Toggle preview
-        (KeyModifiers::ALT, KeyCode::Char('p')) => {
-            app.preview = !app.preview;
-        }
+        (KeyModifiers::ALT, KeyCode::Char('p')) => app.toggle_preview(),
         // search input
         (_, KeyCode::Char(c)) => app.push_search(c),
         // search input del

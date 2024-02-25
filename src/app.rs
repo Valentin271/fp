@@ -6,8 +6,8 @@ use strsim::normalized_damerau_levenshtein;
 
 use crate::{
     project::Project,
-    ui::{preview, projects_list},
-    widgets::Searchbar,
+    ui::projects_list,
+    widgets::{Preview, Searchbar},
 };
 
 mod state;
@@ -24,10 +24,6 @@ pub struct App {
     pub state: AppState,
     /// The time the app took to startup
     pub start_time: Duration,
-    /// Whether the preview is enabled.
-    ///
-    /// Note that even if `true`, preview might be hidden if there is not enough space.
-    pub preview: bool,
     /// List of projects
     pub projects: Vec<Project>,
     /// List of projects filtered
@@ -35,6 +31,7 @@ pub struct App {
     /// UI list state
     pub list_state: ListState,
     searchbar: Searchbar,
+    preview: Preview,
 }
 
 impl Default for App {
@@ -42,11 +39,11 @@ impl Default for App {
         Self {
             state: Default::default(),
             start_time: Duration::default(),
-            preview: true,
             projects: Vec::new(),
             filtered_projects: Vec::new(),
             list_state: ListState::default().with_selected(Some(0)),
             searchbar: Searchbar::default(),
+            preview: Preview::default(),
         }
     }
 }
@@ -97,7 +94,8 @@ impl App {
             new = 0;
         }
 
-        self.list_state.select(Some(new))
+        self.list_state.select(Some(new));
+        self.preview.select(self.selected().cloned());
     }
 
     pub fn down(&mut self) {
@@ -108,6 +106,7 @@ impl App {
         };
 
         self.list_state.select(Some(new));
+        self.preview.select(self.selected().cloned());
     }
 
     pub fn filter_projects(&mut self) {
@@ -130,10 +129,12 @@ impl App {
 
         tmp.sort_unstable_by_key(|(_, s)| -s);
         self.filtered_projects = tmp.into_iter().map(|(p, _)| p.clone()).collect();
+
+        self.preview.select(self.selected().cloned())
     }
 
     /// Returns the currently selected project
-    pub fn selected(&mut self) -> Option<&Project> {
+    pub fn selected(&self) -> Option<&Project> {
         let selected = self.list_state.selected().unwrap_or(0);
         self.filtered_projects.get(selected)
     }
@@ -157,6 +158,10 @@ impl App {
         self.searchbar.clear();
         self.filtered_projects = self.projects.clone();
     }
+
+    pub fn toggle_preview(&mut self) {
+        self.preview.toggle();
+    }
 }
 
 impl Widget for &mut App {
@@ -164,29 +169,29 @@ impl Widget for &mut App {
     where
         Self: Sized,
     {
-        let show_preview = self.preview && area.width > 100;
+        let show_preview = self.preview.is_visible() && area.width > 100;
         let projects_pane_width = if show_preview { 70 } else { 100 };
 
-        let panes = Layout::new(
+        let [projects_pane, preview_pane] = Layout::new(
             Direction::Horizontal,
             [
                 Constraint::Percentage(projects_pane_width),
                 Constraint::Min(0),
             ],
         )
-        .split(area);
+        .areas(area);
 
-        let chunks = Layout::new(
+        let [project_chunk, searchbar_chunk] = Layout::new(
             Direction::Vertical,
             [Constraint::Min(3), Constraint::Length(3)],
         )
-        .split(panes[0]);
+        .areas(projects_pane);
 
-        projects_list::render(chunks[0], buf, self);
-        self.searchbar.render(chunks[1], buf);
+        projects_list::render(project_chunk, buf, self);
+        self.searchbar.render(searchbar_chunk, buf);
 
         if show_preview {
-            preview::render(panes[1], buf, self);
+            self.preview.render(preview_pane, buf)
         }
     }
 }
