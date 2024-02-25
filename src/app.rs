@@ -12,7 +12,7 @@ mod state;
 pub type AppResult<T> = std::result::Result<T, Box<dyn error::Error>>;
 
 /// Value above which project are considered relevant enough
-const MIN_SCORE: f64 = 200.;
+const MIN_SCORE: f64 = 100.;
 
 /// Application.
 #[derive(Debug)]
@@ -116,9 +116,9 @@ impl App {
                 let score = normalized_damerau_levenshtein(
                     p.path.file_name().unwrap().to_str().unwrap(),
                     &self.search,
-                ) * -1000.;
+                ) * 1000.;
 
-                if score < -MIN_SCORE {
+                if score < MIN_SCORE {
                     Some((p, score as i32))
                 } else {
                     None
