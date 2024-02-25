@@ -1,10 +1,14 @@
 use std::{error, time::Duration};
 
-use ratatui::widgets::ListState;
+use ratatui::{prelude::*, widgets::*};
 use state::AppState;
 use strsim::normalized_damerau_levenshtein;
 
-use crate::project::Project;
+use crate::{
+    project::Project,
+    ui::{preview, projects_list},
+    widgets::Searchbar,
+};
 
 mod state;
 
@@ -15,14 +19,11 @@ pub type AppResult<T> = std::result::Result<T, Box<dyn error::Error>>;
 const MIN_SCORE: f64 = 100.;
 
 /// Application.
-#[derive(Debug)]
 pub struct App {
     /// Is the application running?
     pub state: AppState,
     /// The time the app took to startup
     pub start_time: Duration,
-    /// Search string
-    pub search: String,
     /// Whether the preview is enabled.
     ///
     /// Note that even if `true`, preview might be hidden if there is not enough space.
@@ -33,6 +34,7 @@ pub struct App {
     pub filtered_projects: Vec<Project>,
     /// UI list state
     pub list_state: ListState,
+    searchbar: Searchbar,
 }
 
 impl Default for App {
@@ -40,11 +42,11 @@ impl Default for App {
         Self {
             state: Default::default(),
             start_time: Duration::default(),
-            search: String::new(),
             preview: true,
             projects: Vec::new(),
             filtered_projects: Vec::new(),
             list_state: ListState::default().with_selected(Some(0)),
+            searchbar: Searchbar::default(),
         }
     }
 }
@@ -115,10 +117,10 @@ impl App {
             .filter_map(|p| {
                 let score = normalized_damerau_levenshtein(
                     p.path.file_name().unwrap().to_str().unwrap(),
-                    &self.search,
+                    self.searchbar.content(),
                 ) * 1000.;
 
-                if score < MIN_SCORE {
+                if score > MIN_SCORE {
                     Some((p, score as i32))
                 } else {
                     None
@@ -126,7 +128,7 @@ impl App {
             })
             .collect();
 
-        tmp.sort_unstable_by_key(|(_, s)| *s);
+        tmp.sort_unstable_by_key(|(_, s)| -s);
         self.filtered_projects = tmp.into_iter().map(|(p, _)| p.clone()).collect();
     }
 
@@ -134,5 +136,57 @@ impl App {
     pub fn selected(&mut self) -> Option<&Project> {
         let selected = self.list_state.selected().unwrap_or(0);
         self.filtered_projects.get(selected)
+    }
+
+    pub fn push_search(&mut self, c: char) {
+        self.searchbar.push(c);
+        self.list_state.select(Some(0));
+        self.filter_projects();
+    }
+
+    pub fn pop_search(&mut self) {
+        self.searchbar.pop();
+        if self.searchbar.content().is_empty() {
+            self.filtered_projects = self.projects.clone();
+        } else {
+            self.filter_projects();
+        }
+    }
+
+    pub fn clear_search(&mut self) {
+        self.searchbar.clear();
+        self.filtered_projects = self.projects.clone();
+    }
+}
+
+impl Widget for &mut App {
+    fn render(self, area: Rect, buf: &mut Buffer)
+    where
+        Self: Sized,
+    {
+        let show_preview = self.preview && area.width > 100;
+        let projects_pane_width = if show_preview { 70 } else { 100 };
+
+        let panes = Layout::new(
+            Direction::Horizontal,
+            [
+                Constraint::Percentage(projects_pane_width),
+                Constraint::Min(0),
+            ],
+        )
+        .split(area);
+
+        let chunks = Layout::new(
+            Direction::Vertical,
+            [Constraint::Min(3), Constraint::Length(3)],
+        )
+        .split(panes[0]);
+
+        projects_list::render(chunks[0], buf, self);
+        self.searchbar.render(chunks[1], buf);
+
+        if show_preview {
+            preview::render(panes[1], buf, self);
+        }
     }
 }

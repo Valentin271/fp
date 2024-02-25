@@ -5,7 +5,7 @@ use ratatui::{
 
 use crate::{app::App, theme::theme};
 
-pub fn render(f: &mut Frame, app: &mut App, area: Rect) {
+pub fn render(area: Rect, buf: &mut Buffer, app: &mut App) {
     let projects = List::new(app.filtered_projects.clone())
         .block(
             Block::bordered()
@@ -22,5 +22,5 @@ pub fn render(f: &mut Frame, app: &mut App, area: Rect) {
         .highlight_style(theme().selected)
         .direction(ListDirection::BottomToTop);
 
-    f.render_stateful_widget(projects, area, &mut app.list_state);
+    StatefulWidget::render(projects, area, buf, &mut app.list_state);
 }

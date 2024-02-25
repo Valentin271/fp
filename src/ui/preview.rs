@@ -8,7 +8,7 @@ use crate::{
     theme::{theme, LS_COLORS},
 };
 
-pub fn render(f: &mut Frame, app: &mut App, area: Rect) {
+pub fn render(area: Rect, buf: &mut Buffer, app: &mut App) {
     let files = if let Some(selected) = app.selected() {
         selected
             .sorted_files()
@@ -39,5 +39,5 @@ pub fn render(f: &mut Frame, app: &mut App, area: Rect) {
             ),
     );
 
-    f.render_widget(preview, area);
+    Widget::render(preview, area, buf);
 }

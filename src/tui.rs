@@ -9,7 +9,6 @@ use ratatui::{backend::Backend, Terminal};
 use crate::{
     app::{App, AppResult},
     event::EventHandler,
-    ui,
 };
 
 /// Representation of a terminal user interface.
@@ -55,7 +54,8 @@ impl<B: Backend> Tui<B> {
     /// [`Draw`]: ratatui::Terminal::draw
     /// [`rendering`]: crate::ui:render
     pub fn draw(&mut self, app: &mut App) -> AppResult<()> {
-        self.terminal.draw(|frame| ui::render(frame, app))?;
+        self.terminal
+            .draw(|frame| frame.render_widget(app, frame.size()))?;
         Ok(())
     }
 

@@ -11,3 +11,4 @@ pub mod theme;
 pub mod tui;
 /// Widget renderer.
 pub mod ui;
+pub mod widgets;
