@@ -59,7 +59,7 @@ impl App {
             ..Default::default()
         };
         app.dedup();
-        app.filtered_projects = app.projects.clone();
+        app.filtered_projects.clone_from(&app.projects);
         app
     }
 
@@ -148,7 +148,7 @@ impl App {
     pub fn pop_search(&mut self) {
         self.searchbar.pop();
         if self.searchbar.content().is_empty() {
-            self.filtered_projects = self.projects.clone();
+            self.filtered_projects.clone_from(&self.projects);
         } else {
             self.filter_projects();
         }
@@ -156,7 +156,7 @@ impl App {
 
     pub fn clear_search(&mut self) {
         self.searchbar.clear();
-        self.filtered_projects = self.projects.clone();
+        self.filtered_projects.clone_from(&self.projects);
     }
 
     pub fn toggle_preview(&mut self) {
