@@ -9,11 +9,11 @@ description = "A small project switcher"
 [dependencies]
 argh = "0.1.12"
 crossterm = "0.27.0"
-globwalk = "0.9.0"
+globwalk = "0.9.1"
 lscolors = { version = "0.17.0", default-features = false, features = ["crossterm"] }
 once_cell = "1.19.0"
-ratatui = { version = "0.26.1", default-features = false, features = ["crossterm"] }
-strsim = "0.11.0"
+ratatui = { version = "0.26.3", default-features = false, features = ["crossterm"] }
+strsim = "0.11.1"
 
 [profile.release]
 lto = true
