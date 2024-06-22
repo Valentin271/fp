@@ -82,11 +82,14 @@ impl App {
     /// Handles the tick event of the terminal.
     pub fn tick(&self) {}
 
-    /// Set running to false to quit the application.
+    /// Closes the application
     pub fn quit(&mut self) {
         self.state = AppState::Stopped;
     }
 
+    /// Go up one in the list.
+    ///
+    /// If at the top, go back to bottom.
     pub fn up(&mut self) {
         let mut new = self.list_state.selected().unwrap_or(0) + 1;
 
@@ -98,12 +101,16 @@ impl App {
         self.preview.select(self.selected().cloned());
     }
 
+    /// Go down one in the list.
+    ///
+    /// If at the bottom, go back to the top.
     pub fn down(&mut self) {
-        let new = if let Some(n) = self.list_state.selected().unwrap_or(0).checked_sub(1) {
-            n
-        } else {
-            self.filtered_projects.len() - 1
-        };
+        let new = self
+            .list_state
+            .selected()
+            .unwrap_or(0)
+            .checked_sub(1)
+            .unwrap_or(self.filtered_projects.len() - 1);
 
         self.list_state.select(Some(new));
         self.preview.select(self.selected().cloned());
@@ -139,12 +146,18 @@ impl App {
         self.filtered_projects.get(selected)
     }
 
+    /// Add one character to the current search.
+    ///
+    /// Also reset the currently selected item and triggers the list filtering.
     pub fn push_search(&mut self, c: char) {
         self.searchbar.push(c);
         self.list_state.select(Some(0));
         self.filter_projects();
     }
 
+    /// Remove one character from the current search.
+    ///
+    /// Triggers a new list filtering.
     pub fn pop_search(&mut self) {
         self.searchbar.pop();
         if self.searchbar.content().is_empty() {
@@ -154,6 +167,7 @@ impl App {
         }
     }
 
+    /// Reset the current search.
     pub fn clear_search(&mut self) {
         self.searchbar.clear();
         self.filtered_projects.clone_from(&self.projects);

@@ -1,9 +1,4 @@
-use std::{
-    env::{self},
-    io,
-    path::PathBuf,
-    time::Instant,
-};
+use std::{env, io, path::PathBuf, time::Instant};
 
 use fp::{
     app::{App, AppResult},
