@@ -47,8 +47,11 @@ It also uses your `LS_COLORS`.
 
 # TODO
 
+In no particular order
+
 - [ ] implement projects cache
 - [ ] configurable search path
+- [ ] display `filtered entries / total` just like telescope
 - [ ] configurable whitelist
 - [ ] configurable blacklist?
 - [ ] sort by [frecency] by default / [frecency] + search?
