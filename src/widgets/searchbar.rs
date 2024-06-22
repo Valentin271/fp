@@ -47,6 +47,8 @@ impl Widget for &Searchbar {
 
         searchbox.render(area, buf);
 
-        // f.set_cursor(area.x + 1 + self.search.len() as u16, area.y + 1);
+        let x = area.x + 1 + self.search.len() as u16;
+        let y = area.y + 1;
+        buf.set_string(x, y, "█", Style::reset());
     }
 }
