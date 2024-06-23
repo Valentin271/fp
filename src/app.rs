@@ -2,10 +2,10 @@ use std::{error, time::Duration};
 
 use ratatui::{prelude::*, widgets::*};
 use state::AppState;
-use strsim::normalized_damerau_levenshtein;
 
 use crate::{
     project::Project,
+    sorter::Sorter,
     ui::projects_list,
     widgets::{Preview, Searchbar},
 };
@@ -14,9 +14,6 @@ mod state;
 
 /// Application result type.
 pub type AppResult<T> = std::result::Result<T, Box<dyn error::Error>>;
-
-/// Value above which project are considered relevant enough
-const MIN_SCORE: f64 = 100.;
 
 /// Application.
 pub struct App {
@@ -32,6 +29,7 @@ pub struct App {
     pub list_state: ListState,
     searchbar: Searchbar,
     preview: Preview,
+    sorter: Sorter,
 }
 
 impl Default for App {
@@ -44,6 +42,7 @@ impl Default for App {
             list_state: ListState::default().with_selected(Some(0)),
             searchbar: Searchbar::default(),
             preview: Preview::default(),
+            sorter: Sorter::default(),
         }
     }
 }
@@ -116,27 +115,11 @@ impl App {
         self.preview.select(self.selected().cloned());
     }
 
+    /// Filters the projects according to the search prompt.
+    ///
+    /// Should likely be called on every keystroke.
     pub fn filter_projects(&mut self) {
-        let mut tmp: Vec<(&Project, i32)> = self
-            .projects
-            .iter()
-            .filter_map(|p| {
-                let score = normalized_damerau_levenshtein(
-                    p.path.file_name().unwrap().to_str().unwrap(),
-                    self.searchbar.content(),
-                ) * 1000.;
-
-                if score > MIN_SCORE {
-                    Some((p, score as i32))
-                } else {
-                    None
-                }
-            })
-            .collect();
-
-        tmp.sort_unstable_by_key(|(_, s)| -s);
-        self.filtered_projects = tmp.into_iter().map(|(p, _)| p.clone()).collect();
-
+        self.filtered_projects = self.sorter.sort(&self.projects, self.searchbar.content());
         self.preview.select(self.selected().cloned())
     }
 

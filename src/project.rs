@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, fs::DirEntry, path::PathBuf};
+use std::{cmp::Ordering, fmt::Display, fs::DirEntry, path::PathBuf};
 
 use ratatui::{
     prelude::{Line, Styled},
@@ -69,5 +69,11 @@ impl<'a> From<Project> for ListItem<'a> {
                 .to_string()
                 .set_style(theme().project_path),
         ]))
+    }
+}
+
+impl Display for Project {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.path.to_string_lossy())
     }
 }

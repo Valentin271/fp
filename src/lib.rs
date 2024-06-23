@@ -6,6 +6,7 @@ pub mod event;
 /// Event handler.
 pub mod handler;
 pub mod project;
+pub mod sorter;
 pub mod theme;
 /// Terminal user interface.
 pub mod tui;
