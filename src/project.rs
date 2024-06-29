@@ -1,7 +1,7 @@
 use std::{cmp::Ordering, fmt::Display, fs::DirEntry, path::PathBuf};
 
 use ratatui::{
-    prelude::{Line, Styled},
+    prelude::{style::Styled, Line},
     widgets::ListItem,
 };
 

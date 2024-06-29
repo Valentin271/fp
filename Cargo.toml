@@ -10,9 +10,9 @@ description = "A small project switcher"
 argh = "0.1.12"
 crossterm = "0.27.0"
 globwalk = "0.9.1"
-lscolors = { version = "0.17.0", default-features = false, features = ["crossterm"] }
+lscolors = { version = "0.18.0", default-features = false, features = ["crossterm"] }
 once_cell = "1.19.0"
-ratatui = { version = "0.26.3", default-features = false, features = ["crossterm"] }
+ratatui = { version = "0.27.0", default-features = false, features = ["crossterm"] }
 
 [profile.release]
 lto = true
