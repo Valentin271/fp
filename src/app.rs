@@ -59,6 +59,7 @@ impl App {
         };
         app.dedup();
         app.filtered_projects.clone_from(&app.projects);
+        app.preview.select(app.selected().cloned());
         app
     }
 
