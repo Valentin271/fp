@@ -2,7 +2,7 @@
 
 A small utility to quickly change project directory on the command line.
 
-It is heavily inspired by [telescope-project.nvim] with my theme [vim-enfocado].
+It is heavily inspired by [telescope-project.nvim] (in fact it even uses the same fuzzy search algorithm) with my theme [vim-enfocado].
 
 [telescope-project.nvim]: https://github.com/nvim-telescope/telescope-project.nvim
 [vim-enfocado]: https://github.com/wuelnerdotexe/vim-enfocado
@@ -54,6 +54,3 @@ In no particular order
 - [ ] display `filtered entries / total` just like telescope
 - [ ] configurable whitelist
 - [ ] configurable blacklist?
-- [ ] sort by [frecency] by default / [frecency] + search?
-
-[frecency]: https://en.wikipedia.org/wiki/Frecency
