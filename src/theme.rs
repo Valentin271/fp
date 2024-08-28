@@ -1,14 +1,15 @@
+use std::sync::{LazyLock, OnceLock};
+
 use lscolors::LsColors;
-use once_cell::sync::{Lazy, OnceCell};
 use ratatui::prelude::*;
 
 mod variant;
 
 pub use variant::*;
 
-static THEME: OnceCell<Theme> = OnceCell::new();
+static THEME: OnceLock<Theme> = OnceLock::new();
 
-pub static LS_COLORS: Lazy<LsColors> = Lazy::new(|| LsColors::from_env().unwrap_or_default());
+pub static LS_COLORS: LazyLock<LsColors> = LazyLock::new(|| LsColors::from_env().unwrap_or_default());
 
 #[derive(Clone, Copy)]
 pub struct Theme {

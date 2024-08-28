@@ -180,7 +180,6 @@ dependencies = [
  "crossterm",
  "globwalk",
  "lscolors",
- "once_cell",
  "ratatui",
 ]
 
