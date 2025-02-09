@@ -28,7 +28,7 @@ fn main() -> AppResult<()> {
         GlobWalkerBuilder::from_patterns(
             searchpath,
             &[
-                "{.git,Cargo.toml,package.json,Makefile,go.mod,composer.json}",
+                "{.git,Cargo.toml,package.json,Makefile,go.mod,composer.json,__manifest__.py}",
                 "!{node_modules,target,build,dist,cmake*,.*}",
             ],
         )
