@@ -7,7 +7,7 @@ use ratatui::{
 
 use crate::theme::theme;
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Project {
     pub path: PathBuf,
 }

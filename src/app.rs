@@ -53,10 +53,14 @@ impl App {
     where
         I: IntoIterator<Item = Project>,
     {
+        let mut projects: Vec<Project> = projects.into_iter().collect();
+        projects.sort();
+
         let mut app = Self {
-            projects: projects.into_iter().collect(),
+            projects,
             ..Default::default()
         };
+
         app.dedup();
         app.filtered_projects.clone_from(&app.projects);
         app.preview.select(app.selected().cloned());
