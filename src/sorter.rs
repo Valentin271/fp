@@ -203,7 +203,7 @@ mod tests {
 
             sorter.get_uppers("EgG");
 
-            assert!(sorter.cached_uppers.get("EgG").is_some());
+            assert!(sorter.cached_uppers.contains_key("EgG"));
         }
     }
 

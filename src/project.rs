@@ -50,7 +50,7 @@ impl Project {
     }
 }
 
-impl<'a> From<Project> for ListItem<'a> {
+impl From<Project> for ListItem<'_> {
     fn from(value: Project) -> Self {
         Self::from(Line::from(vec![
             value
